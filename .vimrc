@@ -46,8 +46,9 @@ set backupdir=~/.vim/.backup//
 
 "Header
 imap <C-c><C-h>:call PutHeader()<CR>
-autocmd BufWritePre *.c :call Update()
-autocmd BufNewFile *.c :call Header()
+"autocmd BufWritePre *.c :call Update()
+autocmd BufWritePre *.c :call UpdateIfChanged()
+autocmd BufNewFile *.c :call PutHeader()
 
 function! Update()
  	if &modified
@@ -65,27 +66,56 @@ function! Update()
 	call setline(9, updated)
 endfunction
 
+function! UpdateIfChanged()
+	if exists(v:fcs_reason)
+		if (v:fcs_reason == 'changed')
+			call Update()
+		endif
+	endif
+endfunction
+
 function! GenerateHeader()
-	let filename = 
-	let author = 
+	let filename = expand('%:t')
+	let author = ($USER) . " <"
+	if exists($MAIL)
+		author = author . ($MAIL)
+	else
+		author = author . "marvin@42.fr"
+	endif
+	author = author . ">"
 	let created =
-	let distance_8 = 55 - 37 - strwidth(author)
+	let distance_8 = 55 - 37 - strwidth($USER)
 	let h1 = "/* ************************************************************************** */"
 	let h2 = "/*                                                                            */"
 	let h3 = "/*                                                        :::      ::::::::   */"
-	let h4 =
+	let h4 = "/*   " . filename
+	let i = 51 - strwidth(filename)
+	while i > 0
+		h4 = h4 . " "
+		i = i - 1
+	endwhile
+	h4 = h4 . ":+:      :+:    :+:   */"
 	let h5 = "/*                                                    +:+ +:+         +:+     */"
-	let h6 =
+	let h6 = "/*   By: " . author
+	i = 43 - strwidth(author)
+	while i > 0
+		h6 = h6 . " "
+		i = i - 1
+	endwhile
+	h6 = h6 . "+#+  +:+       +#+        */"
 	let h7 = "/*                                                +#+#+#+#+#+   +#+           */"
-	let i = distance_8
-	let h8 = "/*   Created: " . created . " by " . $USER
+	let date = strftime('%Y/%m/%d')
+	let hour = strftime('%H:%M:%S')
+	let created = date . " " . hour
+	let h8 = "/*   Created: " . created . " by " . ($USER)
+	i = distance_8
 	while i > 0
 		h8 = h8 . " "
 		i = i - 1
 	endwhile
 	h8 = h8 . "#+#    #+#             */"
 	i = distance_8 - 1
-	let h9 = "/*   Updated: " . created . " by " . $USER
+	let h9 = "/*   Updated: " . created . " by " . ($USER)
  	while i > 0
 		h8 = h8 . " "
 		i = i - 1
@@ -94,4 +124,58 @@ function! GenerateHeader()
 	call Udpate()
 	let h10 = "/*                                                                            */"
 	let h11 = "/* ************************************************************************** */"
+	let headerlist = [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11]
+	return (headerlist)
+endfunction
+
+function Strcmp(str1, str2)
+    if a:str1 < a:str2
+        return -1
+    elseif a:str1 ==# a:str2
+        return 0
+    else
+        return 1
+    endif
+endfunction
+
+function! PutHeader()
+	let newheader = GenerateHeader()
+	let h1 = get(newheader, 0, 'Cannot read line 1')
+	let h2 = get(newheader, 1, 'Cannot read line 2')
+	let h3 = get(newheader, 2, 'Cannot read line 3')
+	let h4 = get(newheader, 3, 'Cannot read line 4')
+	let h5 = get(newheader, 4, 'Cannot read line 5')
+	let h6 = get(newheader, 5, 'Cannot read line 6')
+	let h7 = get(newheader, 6, 'Cannot read line 7')
+	let h8 = get(newheader, 7, 'Cannot read line 8')
+	let h9 = get(newheader, 8, 'Cannot read line 9')
+	let h10 = get(newheader, 9, 'Cannot read line 10')
+	let h11 = get(newheader, 10, 'Cannot read line 11')
+	let oh1 = getline(1)
+	let oh2 = getline(2)
+	let oh3 = getline(3)
+	let oh4 = getline(4)
+	let oh5 = getline(5)
+	let oh6 = getline(6)
+	let oh7 = getline(7)
+	let oh8 = getline(8)
+	let oh9 = getline(9)
+	let oh10 = getline(10)
+	let oh11 = getline(11)
+	if ((Strcmp(h1, oh1) == 0) && (Strcmp(h2, oh2) == 0) && (Strcmp(h3, oh3) == 0) &&
+\	(Strcmp(h4, oh4) == 0) && (Strcmp(h5, oh5) == 0) && (Strcmp(h6, oh6) == 0) &&
+\	(Strcmp(h7, oh7) == 0) && (Strcmp(h10, oh10) == 0) && (Strcmp(h11, oh11) == 0))
+		return 0
+	endif
+	call append(0, h1)
+	call append(1, h2)
+	call append(2, h3)
+	call append(3, h4)
+	call append(4, h5)
+	call append(5, h6)
+	call append(6, h7)
+	call append(7, h8)
+	call append(8, h9)
+	call append(9, h10)
+	call append(10, h11)
 endfunction
