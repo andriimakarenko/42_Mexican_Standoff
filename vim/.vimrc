@@ -5,8 +5,8 @@
 "                                                     +:+ +:+         +:+      "
 "    By: amakaren <marvin@42.fr>                    +#+  +:+       +#+         "
 "                                                 +#+#+#+#+#+   +#+            "
-"    Created: 2018/12/15 15:01:17 by amakaren          #+#    #+#              "
-"    Updated: 2018/12/16 06:56:18 by amakaren         ###   ########.fr        "
+"    Created: 2018/12/16 22:36:26 by amakaren          #+#    #+#              "
+"    Updated: 2018/12/16 23:22:08 by amakaren         ###   ########.fr        "
 "                                                                              "
 " **************************************************************************** "
 
@@ -33,7 +33,7 @@ set statusline+=,\ Col:\ %c
 
 "Highlighting
 highlight ExtraSpaces ctermbg=red guibg=red
-match ExtraSpaces "\ \{2,}"
+match ExtraSpaces '\(^["#/].*\)\@<!\ \{2,}'
 autocmd BufWinEnter * syn match WSend excludenl /\s\+$/
 autocmd InsertEnter * syn match WSend excludenl /\s\+\%#\@!$/
 autocmd InsertLeave * syn match WSend excludenl /\s\+$/
@@ -45,14 +45,12 @@ set backup
 set backupdir=~/.vim/.backup//
 
 "Header
-imap <C-c><C-h>:call PutHeader()<CR>
-"autocmd BufWritePre *.c :call Update()
+noremap <C-c><C-h> :call PutHeader()<CR>
 autocmd BufWritePre *.c :call UpdateIfChanged()
-autocmd BufNewFile *.c :call PutHeader()
 
 function! Update()
- 	if &modified
-		return 0
+	if &modified
+		 return 0
 	endif
 	let date = strftime('%Y/%m/%d')
 	let hour = strftime('%H:%M:%S')
@@ -78,12 +76,11 @@ function! GenerateHeader()
 	let filename = expand('%:t')
 	let author = ($USER) . " <"
 	if exists($MAIL)
-		author = author . ($MAIL)
+		let author = author . ($MAIL)
 	else
-		author = author . "marvin@42.fr"
+		let author = author . "marvin@42.fr"
 	endif
-	author = author . ">"
-	let created =
+	let author = author . ">"
 	let distance_8 = 55 - 37 - strwidth($USER)
 	let h1 = "/* ************************************************************************** */"
 	let h2 = "/*                                                                            */"
@@ -91,37 +88,36 @@ function! GenerateHeader()
 	let h4 = "/*   " . filename
 	let i = 51 - strwidth(filename)
 	while i > 0
-		h4 = h4 . " "
-		i = i - 1
+		let h4 = h4 . " "
+		let i = i - 1
 	endwhile
-	h4 = h4 . ":+:      :+:    :+:   */"
+	let h4 = h4 . ":+:      :+:    :+:   */"
 	let h5 = "/*                                                    +:+ +:+         +:+     */"
 	let h6 = "/*   By: " . author
-	i = 43 - strwidth(author)
+	let i = 43 - strwidth(author)
 	while i > 0
-		h6 = h6 . " "
-		i = i - 1
+		let h6 = h6 . " "
+		let i = i - 1
 	endwhile
-	h6 = h6 . "+#+  +:+       +#+        */"
+	let h6 = h6 . "+#+  +:+       +#+        */"
 	let h7 = "/*                                                +#+#+#+#+#+   +#+           */"
 	let date = strftime('%Y/%m/%d')
 	let hour = strftime('%H:%M:%S')
 	let created = date . " " . hour
 	let h8 = "/*   Created: " . created . " by " . ($USER)
-	i = distance_8
+	let i = distance_8
 	while i > 0
-		h8 = h8 . " "
-		i = i - 1
+		let h8 = h8 . " "
+		let i = i - 1
 	endwhile
-	h8 = h8 . "#+#    #+#             */"
-	i = distance_8 - 1
+	let h8 = h8 . "#+#    #+#             */"
+	let i = distance_8 - 1
 	let h9 = "/*   Updated: " . created . " by " . ($USER)
- 	while i > 0
-		h8 = h8 . " "
-		i = i - 1
+	while i > 0
+		let h9 = h9 . " "
+		let i = i - 1
 	endwhile
-	h9 = h9 . "###   ########.fr       */""
-	call Udpate()
+	let h9 = h9 . "###   ########.fr       */""
 	let h10 = "/*                                                                            */"
 	let h11 = "/* ************************************************************************** */"
 	let headerlist = [h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11]
@@ -129,16 +125,16 @@ function! GenerateHeader()
 endfunction
 
 function Strcmp(str1, str2)
-    if a:str1 < a:str2
-        return -1
-    elseif a:str1 ==# a:str2
-        return 0
-    else
-        return 1
-    endif
+	if a:str1 <# a:str2
+		return -1
+	elseif a:str1 ==# a:str2
+		return 0
+	else
+		return 1
+	endif
 endfunction
 
-function! PutHeader()
+function PutHeader()
 	let newheader = GenerateHeader()
 	let h1 = get(newheader, 0, 'Cannot read line 1')
 	let h2 = get(newheader, 1, 'Cannot read line 2')
@@ -162,20 +158,22 @@ function! PutHeader()
 	let oh9 = getline(9)
 	let oh10 = getline(10)
 	let oh11 = getline(11)
-	if ((Strcmp(h1, oh1) == 0) && (Strcmp(h2, oh2) == 0) && (Strcmp(h3, oh3) == 0) &&
-\	(Strcmp(h4, oh4) == 0) && (Strcmp(h5, oh5) == 0) && (Strcmp(h6, oh6) == 0) &&
-\	(Strcmp(h7, oh7) == 0) && (Strcmp(h10, oh10) == 0) && (Strcmp(h11, oh11) == 0))
+	if ((Strcmp(h1, oh1) == 0) && (Strcmp(h2, oh2) == 0) && (Strcmp(h3, oh3) == 0)
+\	&& (Strcmp(h4, oh4) == 0) && (Strcmp(h5, oh5) == 0) && (Strcmp(h6, oh6) == 0)
+\	&& (Strcmp(h7, oh7) == 0) && (Strcmp(h10, oh10) == 0) && (Strcmp(h11, oh11) == 0))
 		return 0
 	endif
 	call append(0, h1)
 	call append(1, h2)
 	call append(2, h3)
-	call append(3, h4)
+ 	call append(3, h4)
 	call append(4, h5)
 	call append(5, h6)
 	call append(6, h7)
 	call append(7, h8)
 	call append(8, h9)
 	call append(9, h10)
+	call UpdateIfChanged()
 	call append(10, h11)
+	call append(11, "")
 endfunction

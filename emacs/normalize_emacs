@@ -1,0 +1,18 @@
+C-c C			insert header
+C-u 11 C-n		move to line after header
+C-o  			insert newline
+
+M-x w-cl		whitespace cleanup
+
+C-u 5 C-n		move to first line containing declarations
+C-u 3 C-K		kill lines with declaration
+C-u 2 C-p		move to top of function
+C-y				yank lines at top of function
+
+M-f	<SPC>		move forward over `while`; insert space
+
+C-u 11 C-n		move to line with break statement
+M-f <SPC>		move forward over `break`; insert space
+
+C-x h			select everything in buffer
+C-M-\			indent selected region
