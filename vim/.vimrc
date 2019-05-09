@@ -1,3 +1,15 @@
+# ************************************************************************** #
+#                                                                            #
+#                                                        :::      ::::::::   #
+#   .vimrc                                             :+:      :+:    :+:   #
+#                                                    +:+ +:+         +:+     #
+#   By: amakaren <marvin@42.fr>                    +#+  +:+       +#+        #
+#                                                +#+#+#+#+#+   +#+           #
+#   Created: 2019/05/09 23:15:46 by amakaren          #+#    #+#             #
+#   Updated: 2019/05/09 23:15:46 by amakaren         ###   ########.fr       #
+#                                                                            #
+# ************************************************************************** #
+
 "Personal preferences
 set nu
 syntax on
@@ -43,8 +55,8 @@ function! Update()
 	endif
 	let date = strftime('%Y/%m/%d')
 	let hour = strftime('%H:%M:%S')
-	let updated = "/* Updated: " . date . " " . hour . " by " . $USER
-	let i = 17 - strwidth($USER)
+	let updated = "/* Updated: " . date . " " . hour . " by " . "amakaren"
+	let i = 17 - 8
 	while i > 0
 		let updated = updated . " "
 		let i = i - 1
@@ -63,14 +75,14 @@ endfunction
 
 function! GenerateHeader()
 	let filename = expand('%:t')
-	let author = ($USER) . " <"
+	let author = "amakaren" . " <"
 	if exists($MAIL)
 		let author = author . ($MAIL)
 	else
 		let author = author . "marvin@42.fr"
 	endif
 	let author = author . ">"
-	let distance_8 = 55 - 37 - strwidth($USER)
+	let distance_8 = 55 - 37 - 8
 	let h1 = "/* ************************************************************************** */"
 	let h2 = "/*                                                                            */"
 	let h3 = "/*                                                        :::      ::::::::   */"
@@ -93,7 +105,7 @@ function! GenerateHeader()
 	let date = strftime('%Y/%m/%d')
 	let hour = strftime('%H:%M:%S')
 	let created = date . " " . hour
-	let h8 = "/*   Created: " . created . " by " . ($USER)
+	let h8 = "/*   Created: " . created . " by " . "amakaren"
 	let i = distance_8
 	while i > 0
 		let h8 = h8 . " "
@@ -101,7 +113,7 @@ function! GenerateHeader()
 	endwhile
 	let h8 = h8 . "#+#    #+#             */"
 	let i = distance_8 - 1
-	let h9 = "/*   Updated: " . created . " by " . ($USER)
+	let h9 = "/*   Updated: " . created . " by " . "amakaren"
 	while i > 0
 		let h9 = h9 . " "
 		let i = i - 1
