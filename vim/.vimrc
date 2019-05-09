@@ -27,7 +27,7 @@ inoremap ( ()<Esc>i
 inoremap [ []<Esc>i
 inoremap " ""<Esc>i
 inoremap < <><Esc>i
-inoremap { {<Return><Tab><BS>}<Esc>ko<Tab>
+inoremap { {<Return><BS><BS>}k<BS><Esc>ko<BS>
 
 "Display the cursor column
 set statusline+=,\ Col:\ %c
