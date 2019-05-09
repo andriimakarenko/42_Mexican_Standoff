@@ -1,32 +1,21 @@
-" **************************************************************************** "
-"                                                                              "
-"                                                         :::      ::::::::    "
-"    .vimrc                                             :+:      :+:    :+:    "
-"                                                     +:+ +:+         +:+      "
-"    By: amakaren <marvin@42.fr>                    +#+  +:+       +#+         "
-"                                                 +#+#+#+#+#+   +#+            "
-"    Created: 2018/12/16 22:36:26 by amakaren          #+#    #+#              "
-"    Updated: 2018/12/16 23:22:08 by amakaren         ###   ########.fr        "
-"                                                                              "
-" **************************************************************************** "
-
 "Personal preferences
 set nu
 syntax on
 set statusline+=File:\ %F
 set colorcolumn=81
-hi ColorColumn ctermbg=blue guibg=blue
+hi ColorColumn ctermbg=green guibg=green
 nmap <Space> <PageDown>
 
 "C code indent
 set cindent
+set tabstop=4
 
 "Autoclose parenthesis
 inoremap ( ()<Esc>i
 inoremap [ []<Esc>i
 inoremap " ""<Esc>i
 inoremap < <><Esc>i
-inoremap { {<Tab><Return><BS>}<Esc>ko
+inoremap { {<Return><Tab><BS>}<Esc>ko<Tab>
 
 "Display the cursor column
 set statusline+=,\ Col:\ %c
